@@ -62,7 +62,7 @@ def main():
     else:
         our_results.filtered_build_names_list =\
             our_client.return_filtered_testrunner_build_definitions_list(args.envt,
-                                                                         filter_under_path='\\Automation\\Salesforce')
+                                                                         filter_under_path='\\Automation\\MyDelivery')
 
     # get target_BuildDefinitionReferences as a dict ('Name':BuildDefinitionReference)
     our_results.target_build_def_refs = our_client.return_target_build_definition_references_dict()

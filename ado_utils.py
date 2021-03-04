@@ -240,9 +240,9 @@ class ADOBuildObj(OurADOObj):
 
         return self.filtered_build_names_list
 
-    def return_filtered_testrunner_build_definitions_list(self, envt, filter_under_path='\\Automation\\Salesforce'):
+    def return_filtered_testrunner_build_definitions_list(self, envt, filter_under_path='\\Automation\\MyDelivery'):
         """
-        Get a list of Salesforce build names from under the 'Automation' folder in ADO 'My Default Project Name' project,
+        Get a list of MyDelivery build names from under the 'Automation' folder in ADO 'My Default Project Name' project,
         then filter it:
           - so that it only includes Saleforce Testrunner pipelines
           - by test environment (string) in the pipeline name (e.g.uatcopy1, staging) where one is given

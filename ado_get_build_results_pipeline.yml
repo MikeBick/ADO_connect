@@ -39,7 +39,7 @@ steps:
 
 - script: |
     cd ADO_connect && python get_pipeline_builds_test_results.py --pat %ENV_PAT% --envt sf_all
-  displayName: 'Get all Salesforce testrunner result stats from ADO'
+  displayName: 'Get all MyDelivery testrunner result stats from ADO'
   continueOnError: true
   env:
    # secret variables need to be explicitly mapped to be used in a task within YAML pipeliine files
@@ -47,7 +47,7 @@ steps:
 
 - script: |
     cd ADO_connect && python get_pipeline_builds_test_results.py --pat %ENV_PAT% --envt projthree
-  displayName: 'Get all projthree Salesforce testrunner result stats from ADO'
+  displayName: 'Get all projthree MyDelivery testrunner result stats from ADO'
   continueOnError: true
   env:
    # secret variables need to be explicitly mapped to be used in a task within YAML pipeliine files
@@ -55,7 +55,7 @@ steps:
 
 - script: |
     cd ADO_connect && python get_pipeline_builds_test_results.py --pat %ENV_PAT% --envt projone
-  displayName: 'Get all projone Salesforce testrunner result stats from ADO'
+  displayName: 'Get all projone MyDelivery testrunner result stats from ADO'
   continueOnError: true
   env:
    # secret variables need to be explicitly mapped to be used in a task within YAML pipeliine files
