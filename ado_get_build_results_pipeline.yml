@@ -1,5 +1,5 @@
 pool:
-  name: AutoUtils
+  name: MyUtils
 steps:
 - powershell: |
    $var = (gci env:*).GetEnumerator() | Sort-Object Name
@@ -46,32 +46,32 @@ steps:
    env_pat: $(env_pat)
 
 - script: |
-    cd ADO_connect && python get_pipeline_builds_test_results.py --pat %ENV_PAT% --envt uatcopy1
-  displayName: 'Get all uatcopy1 Salesforce testrunner result stats from ADO'
+    cd ADO_connect && python get_pipeline_builds_test_results.py --pat %ENV_PAT% --envt projthree
+  displayName: 'Get all projthree Salesforce testrunner result stats from ADO'
   continueOnError: true
   env:
    # secret variables need to be explicitly mapped to be used in a task within YAML pipeliine files
    env_pat: $(env_pat)
 
 - script: |
-    cd ADO_connect && python get_pipeline_builds_test_results.py --pat %ENV_PAT% --envt staging
-  displayName: 'Get all Staging Salesforce testrunner result stats from ADO'
+    cd ADO_connect && python get_pipeline_builds_test_results.py --pat %ENV_PAT% --envt projone
+  displayName: 'Get all projone Salesforce testrunner result stats from ADO'
   continueOnError: true
   env:
    # secret variables need to be explicitly mapped to be used in a task within YAML pipeliine files
    env_pat: $(env_pat)
 
 - script: |
-    cd ADO_connect && python get_pipeline_builds_test_results.py --pat %ENV_PAT% --envt bat
-  displayName: 'Get all BAT testrunner result stats from ADO'
+    cd ADO_connect && python get_pipeline_builds_test_results.py --pat %ENV_PAT% --envt projtwo
+  displayName: 'Get all projtwo testrunner result stats from ADO'
   continueOnError: true
   env:
    # secret variables need to be explicitly mapped to be used in a task within YAML pipeliine files
    env_pat: $(env_pat)
 
 - script: |
-    cd ADO_connect && python get_pipeline_builds_test_results.py --pat %ENV_PAT% --envt tsa
-  displayName: 'Get all TSAExit testrunner result stats from ADO'
+    cd ADO_connect && python get_pipeline_builds_test_results.py --pat %ENV_PAT% --envt projfour
+  displayName: 'Get all projfour testrunner result stats from ADO'
   continueOnError: true
   env:
    # secret variables need to be explicitly mapped to be used in a task within YAML pipeliine files
