@@ -1,0 +1,92 @@
+pool:
+  name: AutoUtils
+steps:
+- powershell: |
+   $var = (gci env:*).GetEnumerator() | Sort-Object Name
+   $out = ""
+   Foreach ($v in $var) {$out = $out + "`t{0,-28} = {1,-28}`n" -f $v.Name, $v.Value}
+
+   write-output "dump variables on $env:BUILD_ARTIFACTSTAGINGDIRECTORY\test.md"
+   $fileName = "$env:BUILD_ARTIFACTSTAGINGDIRECTORY\test.md"
+   set-content $fileName $out
+
+   write-output "##vso[task.addattachment type=Distributedtask.Core.Summary;name=Environment Variables;]$fileName"
+
+  displayName: 'Dump environment variables'
+
+# Use Python version
+# Use the specified version of Python from the tool cache, optionally adding it to the PATH
+# installed on Utils01 to C:\Automated\Agent\_work\_tool\Python\3.7.4\x86
+# As per https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/tool/use-python-version?view=azure-devops
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.7'
+    addToPath: true 
+    architecture: 'x86' # Options: x86, x64 (this argument applies only on Windows agents)
+
+- task: PipAuthenticate@1
+  displayName: 'Pip Authenticate'
+
+- script: |
+    python -m pip install -r ADO_connect\requirements.txt
+  displayName: 'install python module prerequisites'
+
+- script: |
+   ipconfig
+   whoami
+   dir
+  displayName: 'Debug logging'
+
+- script: |
+    cd ADO_connect && python get_pipeline_builds_test_results.py --pat %ENV_PAT% --envt sf_all
+  displayName: 'Get all Salesforce testrunner result stats from ADO'
+  continueOnError: true
+  env:
+   # secret variables need to be explicitly mapped to be used in a task within YAML pipeliine files
+   env_pat: $(env_pat)
+
+- script: |
+    cd ADO_connect && python get_pipeline_builds_test_results.py --pat %ENV_PAT% --envt uatcopy1
+  displayName: 'Get all uatcopy1 Salesforce testrunner result stats from ADO'
+  continueOnError: true
+  env:
+   # secret variables need to be explicitly mapped to be used in a task within YAML pipeliine files
+   env_pat: $(env_pat)
+
+- script: |
+    cd ADO_connect && python get_pipeline_builds_test_results.py --pat %ENV_PAT% --envt staging
+  displayName: 'Get all Staging Salesforce testrunner result stats from ADO'
+  continueOnError: true
+  env:
+   # secret variables need to be explicitly mapped to be used in a task within YAML pipeliine files
+   env_pat: $(env_pat)
+
+- script: |
+    cd ADO_connect && python get_pipeline_builds_test_results.py --pat %ENV_PAT% --envt bat
+  displayName: 'Get all BAT testrunner result stats from ADO'
+  continueOnError: true
+  env:
+   # secret variables need to be explicitly mapped to be used in a task within YAML pipeliine files
+   env_pat: $(env_pat)
+
+- script: |
+    cd ADO_connect && python get_pipeline_builds_test_results.py --pat %ENV_PAT% --envt tsa
+  displayName: 'Get all TSAExit testrunner result stats from ADO'
+  continueOnError: true
+  env:
+   # secret variables need to be explicitly mapped to be used in a task within YAML pipeliine files
+   env_pat: $(env_pat)
+
+- task: CopyFiles@2
+   # Copy csv files to artifact dir
+  continueOnError: true
+  inputs:
+    SourceFolder: '$(Build.SourcesDirectory)\ADO_connect'
+    Contents: '*.csv'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'testrunner_reports'
+    publishLocation: 'Container'
